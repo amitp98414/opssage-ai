@@ -1,0 +1,28 @@
+version: 2.1
+
+jobs:
+  backend-tests:
+    docker:
+      - image: cimg/python:3.13
+
+    environment:
+      OPENAI_API_KEY: test-key-for-ci
+      OPENAI_MODEL: gpt-4.1-mini
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install backend dependencies
+          command: python -m pip install -r backend/requirements-dev.txt
+
+      - run:
+          name: Run backend tests with coverage
+          command: |
+            cd backend
+            python -m pytest -v --cov=app --cov-report=term-missing
+
+workflows:
+  test-and-verify:
+    jobs:
+      - backend-tests
