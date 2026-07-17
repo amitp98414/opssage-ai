@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    APP_NAME: str = "Enterprise AI DevOps Assistant"
+    APP_NAME: str = "OpsSage AI"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
 

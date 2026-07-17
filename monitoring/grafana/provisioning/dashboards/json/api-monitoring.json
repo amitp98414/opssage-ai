@@ -1,7 +1,7 @@
 {
   "id": null,
   "uid": "devops-api-monitoring",
-  "title": "DevOps API Monitoring",
+  "title": "OpsSage AI Monitoring",
   "tags": [
     "devops",
     "fastapi",
@@ -33,7 +33,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "up{job=\"amitops-api\"}",
+          "expr": "up{job=\"opssage-api\"}",
           "instant": true,
           "range": false,
           "legendFormat": "API"
@@ -104,7 +104,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(rate(http_requests_total{job=\"amitops-api\"}[5m]))",
+          "expr": "sum(rate(http_requests_total{job=\"opssage-api\"}[5m]))",
           "instant": true,
           "range": false
         }
@@ -155,7 +155,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "100 * (sum(rate(http_requests_total{job=\"amitops-api\",status=~\"5..\"}[5m])) or vector(0)) / clamp_min(sum(rate(http_requests_total{job=\"amitops-api\"}[5m])), 0.001)",
+          "expr": "100 * (sum(rate(http_requests_total{job=\"opssage-api\",status=~\"5..\"}[5m])) or vector(0)) / clamp_min(sum(rate(http_requests_total{job=\"opssage-api\"}[5m])), 0.001)",
           "instant": true,
           "range": false
         }
@@ -214,7 +214,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"amitops-api\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"opssage-api\"}[5m])) by (le))",
           "instant": true,
           "range": false
         }
@@ -273,7 +273,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(rate(http_requests_total{job=\"amitops-api\"}[5m]))",
+          "expr": "sum(rate(http_requests_total{job=\"opssage-api\"}[5m]))",
           "legendFormat": "Requests",
           "range": true
         }
@@ -323,7 +323,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by(status) (rate(http_requests_total{job=\"amitops-api\"}[5m]))",
+          "expr": "sum by(status) (rate(http_requests_total{job=\"opssage-api\"}[5m]))",
           "legendFormat": "{{status}}",
           "range": true
         }
@@ -373,7 +373,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"amitops-api\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"opssage-api\"}[5m])) by (le))",
           "legendFormat": "P95 Latency",
           "range": true
         }

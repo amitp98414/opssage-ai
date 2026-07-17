@@ -1,9 +1,9 @@
 apiVersion: 1
 
 providers:
-  - name: DevOps Monitoring
+  - name: OpsSage AI
     orgId: 1
-    folder: DevOps Monitoring
+    folder: OpsSage AI
     type: file
     disableDeletion: false
     editable: true

@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: docker/backend/Dockerfile
-    container_name: enterprise-ai-backend
+    container_name: opssage-backend
     ports:
       - "8000:8000"
     volumes:
@@ -12,7 +12,7 @@ services:
 
   prometheus:
     image: prom/prometheus:v3.13.1
-    container_name: amitops-prometheus
+    container_name: opssage-prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
@@ -28,7 +28,7 @@ services:
 
   grafana:
     image: grafana/grafana:13.1.0
-    container_name: amitops-grafana
+    container_name: opssage-grafana
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}

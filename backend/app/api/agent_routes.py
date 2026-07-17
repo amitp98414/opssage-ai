@@ -8,7 +8,7 @@ from app.services.agent_service import execute_agent
 
 router = APIRouter(
     prefix="/agent",
-    tags=["Hermes-style AI Agent"],
+    tags=["OpsSage AI Agent"],
 )
 
 

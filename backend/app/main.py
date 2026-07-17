@@ -11,7 +11,7 @@ app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     description=(
-        "Hermes-style AI Agent for DevOps diagnostics and "
+        "OpsSage AI Agent for DevOps diagnostics and "
         "authorized bug-bounty assistance."
     ),
 )
