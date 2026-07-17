@@ -10,6 +10,16 @@ A containerized, multi-agent AI backend for DevOps diagnostics and authorized se
 
 > Portfolio case study demonstrating backend development, containerization, automated testing and CI/CD engineering.
 
+## Project Showcase
+
+### Grafana Dashboard Overview
+
+![OpsSage AI Grafana dashboard overview](docs/images/opssage-dashboard-overview.png)
+
+### OpsSage AI Monitoring
+
+![OpsSage AI monitoring dashboard](docs/images/opssage-ai-monitoring.png)
+
 ## What It Solves
 
 DevOps teams often waste time collecting logs, checking infrastructure and selecting the correct troubleshooting workflow. OpsSage AI provides one API that routes requests to specialized agents for:
