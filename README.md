@@ -10,6 +10,14 @@ A containerized, multi-agent AI backend for DevOps diagnostics and authorized se
 
 > Portfolio case study demonstrating backend development, containerization, automated testing and CI/CD engineering.
 
+## Live Demo
+
+- [Public API](https://opssage-ai.onrender.com/)
+- [Interactive Swagger Documentation](https://opssage-ai.onrender.com/docs)
+- [Health Check](https://opssage-ai.onrender.com/health)
+
+> The public portfolio deployment uses a disabled AI key for safety. AI agent execution is available in an authenticated deployment.
+
 ## Project Showcase
 
 ### Grafana Dashboard Overview
