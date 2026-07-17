@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "Creating Hermes-style Agent MVP..."
+echo "Creating OpsSage Agent MVP..."
 
 mkdir -p backend/app/{api,agents,tools}
 touch backend/app/api/__init__.py
@@ -367,7 +367,7 @@ from app.services.agent_service import execute_agent
 
 router = APIRouter(
     prefix="/agent",
-    tags=["Hermes-style AI Agent"],
+    tags=["OpsSage AI Agent"],
 )
 
 
@@ -423,7 +423,7 @@ app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     description=(
-        "Hermes-style AI Agent for DevOps diagnostics and "
+        "OpsSage AI Agent for DevOps diagnostics and "
         "authorized bug-bounty assistance."
     ),
 )

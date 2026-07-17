@@ -1,38 +1,38 @@
 groups:
-  - name: devops-api-alerts
+  - name: opssage-api-alerts
     rules:
-      - alert: DevOpsAPIDown
-        expr: up{job="amitops-api"} == 0
+      - alert: OpsSageAPIDown
+        expr: up{job="opssage-api"} == 0
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "DevOps API is down"
-          description: "Prometheus cannot reach the DevOps API for more than 1 minute."
+          summary: "OpsSage API is down"
+          description: "Prometheus cannot reach the OpsSage API for more than 1 minute."
 
-      - alert: DevOpsAPIHighErrorRate
+      - alert: OpsSageAPIHighErrorRate
         expr: |
           100 *
-          (sum(rate(http_requests_total{job="amitops-api",status=~"5.."}[5m])) or vector(0))
+          (sum(rate(http_requests_total{job="opssage-api",status=~"5.."}[5m])) or vector(0))
           /
-          clamp_min(sum(rate(http_requests_total{job="amitops-api"}[5m])), 0.001)
+          clamp_min(sum(rate(http_requests_total{job="opssage-api"}[5m])), 0.001)
           > 5
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "DevOps API error rate is high"
+          summary: "OpsSage API error rate is high"
           description: "The API error rate has remained above 5% for 5 minutes."
 
-      - alert: DevOpsAPIHighLatency
+      - alert: OpsSageAPIHighLatency
         expr: |
           histogram_quantile(
             0.95,
-            sum(rate(http_request_duration_seconds_bucket{job="amitops-api"}[5m])) by (le)
+            sum(rate(http_request_duration_seconds_bucket{job="opssage-api"}[5m])) by (le)
           ) > 1
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "DevOps API latency is high"
+          summary: "OpsSage API latency is high"
           description: "P95 API response time has remained above 1 second for 5 minutes."

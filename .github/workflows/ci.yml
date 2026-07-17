@@ -1,4 +1,4 @@
-name: AmitOps AI CI
+name: OpsSage AI CI
 
 on:
   push:

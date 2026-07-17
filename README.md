@@ -1,6 +1,6 @@
-# AmitOps AI
+# OpsSage AI
 
-[![GitHub Actions CI](https://github.com/amitp98414/enterprise-ai-devops-assistant/actions/workflows/ci.yml/badge.svg)](https://github.com/amitp98414/enterprise-ai-devops-assistant/actions)
+[![GitHub Actions CI](https://github.com/amitp98414/opssage-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/amitp98414/opssage-ai/actions)
 ![Python](https://img.shields.io/badge/Python-3.13%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-API-009688)
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED)
@@ -12,7 +12,7 @@ A containerized, multi-agent AI backend for DevOps diagnostics and authorized se
 
 ## What It Solves
 
-DevOps teams often waste time collecting logs, checking infrastructure and selecting the correct troubleshooting workflow. AmitOps AI provides one API that routes requests to specialized agents for:
+DevOps teams often waste time collecting logs, checking infrastructure and selecting the correct troubleshooting workflow. OpsSage AI provides one API that routes requests to specialized agents for:
 
 - DevOps diagnostics
 - Docker and Linux troubleshooting
@@ -74,8 +74,8 @@ flowchart TD
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/amitp98414/enterprise-ai-devops-assistant.git
-cd enterprise-ai-devops-assistant
+git clone https://github.com/amitp98414/opssage-ai.git
+cd opssage-ai
 ```
 
 ### 2. Configure environment variables
@@ -231,5 +231,5 @@ docker compose up -d
 The dashboard is available under:
 
 ```text
-Dashboards → DevOps Monitoring → DevOps API Monitoring
+Dashboards → OpsSage AI → OpsSage AI Monitoring
 ```

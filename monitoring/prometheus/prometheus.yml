@@ -11,7 +11,7 @@ scrape_configs:
       - targets:
           - prometheus:9090
 
-  - job_name: amitops-api
+  - job_name: opssage-api
     metrics_path: /metrics
     static_configs:
       - targets:
