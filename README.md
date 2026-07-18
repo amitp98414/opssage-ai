@@ -12,6 +12,8 @@ A containerized, multi-agent AI backend for DevOps diagnostics and authorized se
 
 ## Live Demo
 
+[**Launch the OpsSage AI Live Demo →**](https://opssage-ai.onrender.com/demo)
+
 - [Public API](https://opssage-ai.onrender.com/)
 - [Interactive Swagger Documentation](https://opssage-ai.onrender.com/docs)
 - [Health Check](https://opssage-ai.onrender.com/health)
