@@ -3,178 +3,133 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta
-    name="description"
-    content="OpsSage AI — secure AI-powered DevOps diagnostics and automation."
-  >
-  <title>OpsSage AI | DevOps Intelligence</title>
+  <meta name="description" content="OpsSage AI is an enterprise DevOps intelligence platform for incident diagnosis, observability and secure operations.">
+  <title>OpsSage AI | Enterprise DevOps Intelligence</title>
   <link rel="stylesheet" href="/static/styles.css">
   <script src="/static/app.js" defer></script>
 </head>
-
 <body>
   <header class="navbar">
-    <a class="brand" href="/demo">
-      <span class="brand-icon">O</span>
+    <a class="brand" href="/demo" aria-label="OpsSage AI home">
+      <span class="brand-icon">OS</span>
       <span>OpsSage AI</span>
     </a>
-
-    <nav>
-      <a href="#capabilities">Capabilities</a>
-      <a href="#live-status">Live Status</a>
-      <a href="/docs" target="_blank">API Docs</a>
+    <nav aria-label="Primary navigation">
+      <a href="#platform">Platform</a>
+      <a href="#security">Security</a>
+      <a href="#pricing">Pricing</a>
+      <a href="/docs" target="_blank" rel="noreferrer">API</a>
     </nav>
-
-    <span id="nav-status" class="status-badge">Checking API...</span>
+    <a class="button compact secondary" href="#contact">Request access</a>
   </header>
 
   <main>
     <section class="hero">
-      <div class="hero-content">
-        <p class="eyebrow">AI-POWERED DEVOPS OPERATIONS</p>
-
-        <h1>Diagnose infrastructure issues with confidence.</h1>
-
-        <p class="hero-description">
-          OpsSage AI combines specialist AI agents, secure APIs and
-          production-grade observability for faster DevOps troubleshooting.
-        </p>
-
+      <div class="hero-copy">
+        <p class="eyebrow">Enterprise DevOps Intelligence</p>
+        <h1>Turn operational noise into clear, auditable action.</h1>
+        <p class="hero-description">OpsSage AI unifies incident diagnosis, infrastructure health, specialist AI guidance and production observability in one secure operations workspace.</p>
         <div class="hero-actions">
-          <a class="button primary" href="#agent-demo">Explore Demo</a>
-          <a class="button secondary" href="/docs" target="_blank">
-            Open Swagger API
-          </a>
+          <a class="button primary" href="#contact">Join early access</a>
+          <a class="button secondary" href="#platform">Explore platform</a>
         </div>
-
-        <div class="trust-row">
-          <span>FastAPI</span>
-          <span>Docker</span>
-          <span>Prometheus</span>
-          <span>Grafana</span>
-          <span>CI/CD</span>
+        <div class="trust-row" aria-label="Technology stack">
+          <span>FastAPI</span><span>Docker</span><span>PostgreSQL</span><span>Prometheus</span><span>Grafana</span><span>CI/CD</span>
         </div>
       </div>
 
-      <div class="hero-panel">
-        <div class="terminal-bar">
-          <span></span><span></span><span></span>
-          <small>opssage-ai / production</small>
+      <div class="command-center" aria-label="OpsSage command center preview">
+        <div class="panel-top"><span>Operations command center</span><span id="nav-status" class="status-badge">Checking API</span></div>
+        <div class="metrics-row">
+          <article><small>Service health</small><strong id="api-status">Checking</strong></article>
+          <article><small>Open incidents</small><strong>03</strong></article>
+          <article><small>Mean time to insight</small><strong>2.4m</strong></article>
         </div>
-
-        <div class="terminal-content">
-          <p><span class="prompt">$</span> check service health</p>
-          <p class="success">✓ API service reachable</p>
-          <p class="success">✓ Monitoring enabled</p>
-          <p class="success">✓ Security controls active</p>
-          <p><span class="prompt">$</span> select specialist agent</p>
-          <p class="info">→ DevOps agent ready</p>
+        <div class="incident-card">
+          <div><span class="severity">SEV-2</span><small>payments-api / production</small></div>
+          <h2>Latency increased after deployment</h2>
+          <p>OpsSage correlated request saturation, container restarts and the latest release.</p>
+          <ul>
+            <li>Probable cause: exhausted database connection pool</li>
+            <li>Recommended action: validate pool settings and rollback candidate</li>
+            <li>Human approval required before remediation</li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <section id="live-status" class="section">
-      <div class="section-heading">
-        <p class="eyebrow">LIVE SYSTEM</p>
-        <h2>Service health</h2>
-      </div>
-
-      <div class="status-grid">
-        <article class="metric-card">
-          <span>API Status</span>
-          <strong id="api-status">Checking...</strong>
-        </article>
-
-        <article class="metric-card">
-          <span>Application</span>
-          <strong id="application-name">OpsSage AI</strong>
-        </article>
-
-        <article class="metric-card">
-          <span>Version</span>
-          <strong id="application-version">--</strong>
-        </article>
-      </div>
+    <section class="logo-strip" aria-label="Designed for modern engineering teams">
+      <span>PLATFORM ENGINEERING</span><span>SRE</span><span>DEVOPS</span><span>SECURITY OPERATIONS</span><span>ENGINEERING LEADERSHIP</span>
     </section>
 
-    <section id="capabilities" class="section">
+    <section id="platform" class="section">
       <div class="section-heading">
-        <p class="eyebrow">CAPABILITIES</p>
-        <h2>One platform. Multiple specialists.</h2>
+        <p class="eyebrow">One operational layer</p>
+        <h2>Built for the complete incident lifecycle.</h2>
+        <p>Connect systems, detect signals, investigate evidence and coordinate resolution without losing accountability.</p>
       </div>
-
       <div class="feature-grid">
-        <article class="feature-card">
-          <div class="feature-icon">01</div>
-          <h3>DevOps Diagnostics</h3>
-          <p>Analyse Docker, Linux, Git and infrastructure incidents.</p>
-        </article>
-
-        <article class="feature-card">
-          <div class="feature-icon">02</div>
-          <h3>Security Analysis</h3>
-          <p>Support authorized defensive security investigation workflows.</p>
-        </article>
-
-        <article class="feature-card">
-          <div class="feature-icon">03</div>
-          <h3>Observability</h3>
-          <p>Prometheus metrics, Grafana dashboards and alerting rules.</p>
-        </article>
+        <article class="feature-card"><span>01</span><h3>Unified observability</h3><p>Health, metrics and alert context from your services in a single workspace.</p></article>
+        <article class="feature-card"><span>02</span><h3>AI-assisted diagnosis</h3><p>Specialist analysis that explains likely causes, evidence and safe next steps.</p></article>
+        <article class="feature-card"><span>03</span><h3>Incident workflow</h3><p>Severity, ownership, timelines, runbooks and SLA tracking for every event.</p></article>
+        <article class="feature-card"><span>04</span><h3>Human-controlled actions</h3><p>Approval gates prevent unrestricted automated changes in production.</p></article>
+        <article class="feature-card"><span>05</span><h3>Audit-ready history</h3><p>Preserve decisions, evidence and operational actions for review and compliance.</p></article>
+        <article class="feature-card"><span>06</span><h3>Enterprise integrations</h3><p>Designed for cloud platforms, GitHub, Docker, Prometheus and team notifications.</p></article>
       </div>
     </section>
 
-    <section id="agent-demo" class="section demo-section">
-      <div class="demo-copy">
-        <p class="eyebrow">SECURE AGENT DEMO</p>
-        <h2>Run an OpsSage specialist</h2>
-        <p>
-          AI execution requires an authorized API key. The public portfolio
-          deployment keeps execution disabled to prevent unauthorized usage.
-        </p>
+    <section id="security" class="section security-section">
+      <div>
+        <p class="eyebrow">Security by design</p>
+        <h2>Operational intelligence without surrendering control.</h2>
+        <p>OpsSage is being engineered around tenant isolation, role-based access, encrypted secrets, rate limits and immutable audit trails.</p>
       </div>
+      <div class="security-list">
+        <div><strong>Tenant isolation</strong><span>Separate company workspaces and scoped data access.</span></div>
+        <div><strong>Role-based permissions</strong><span>Owner, administrator, engineer and viewer controls.</span></div>
+        <div><strong>Approval workflows</strong><span>Human review before production remediation.</span></div>
+        <div><strong>Defensive use policy</strong><span>Authorized infrastructure and security workflows only.</span></div>
+      </div>
+    </section>
 
-      <form id="agent-form" class="agent-form">
-        <label for="mode">Agent mode</label>
-        <select id="mode" name="mode">
-          <option value="auto">Automatic selection</option>
-          <option value="devops">DevOps specialist</option>
-          <option value="bugbounty">Authorized security specialist</option>
-        </select>
+    <section id="pricing" class="section">
+      <div class="section-heading">
+        <p class="eyebrow">Flexible adoption</p>
+        <h2>Start focused. Scale with your operations.</h2>
+        <p>Indicative launch pricing. Final plans will depend on infrastructure volume, retention and support requirements.</p>
+      </div>
+      <div class="pricing-grid">
+        <article class="price-card"><h3>Starter</h3><p class="price">₹1,999 <span>/ month</span></p><ul><li>Small team workspace</li><li>Core monitoring</li><li>Basic AI diagnostics</li><li>Email support</li></ul><a class="button secondary" href="#contact">Join waitlist</a></article>
+        <article class="price-card featured"><span class="popular">Most popular</span><h3>Professional</h3><p class="price">₹5,999 <span>/ month</span></p><ul><li>Expanded service limits</li><li>Incident workflows</li><li>Team roles</li><li>Advanced diagnostics</li></ul><a class="button primary" href="#contact">Request access</a></article>
+        <article class="price-card"><h3>Enterprise</h3><p class="price">Custom</p><ul><li>Private deployment options</li><li>Custom integrations</li><li>Advanced governance</li><li>Priority onboarding</li></ul><a class="button secondary" href="#contact">Contact sales</a></article>
+      </div>
+    </section>
 
-        <label for="prompt">Describe the issue</label>
-        <textarea
-          id="prompt"
-          name="prompt"
-          rows="5"
-          minlength="3"
-          maxlength="12000"
-          placeholder="Example: Diagnose why my Docker service is restarting..."
-          required
-        ></textarea>
-
-        <label for="api-key">Authorized API key</label>
-        <input
-          id="api-key"
-          name="api-key"
-          type="password"
-          placeholder="X-API-Key"
-        >
-
-        <button class="button primary" type="submit">Run Agent</button>
-        <div id="agent-result" class="agent-result" aria-live="polite">
-          Waiting for a request.
-        </div>
+    <section id="contact" class="section subscribe-section">
+      <div>
+        <p class="eyebrow">Early access</p>
+        <h2>Get product updates and launch access.</h2>
+        <p>Subscribe for release notes, onboarding availability and enterprise pilot announcements.</p>
+      </div>
+      <form id="subscribe-form" class="subscribe-form">
+        <label for="subscriber-email">Work email</label>
+        <input id="subscriber-email" name="email" type="email" autocomplete="email" maxlength="320" placeholder="you@company.com" required>
+        <label for="subscriber-company">Company <span>(optional)</span></label>
+        <input id="subscriber-company" name="company" type="text" autocomplete="organization" maxlength="160" placeholder="Company name">
+        <label class="consent-row" for="subscriber-consent">
+          <input id="subscriber-consent" name="consent" type="checkbox" required>
+          <span>I agree to receive OpsSage AI product and launch updates. I can unsubscribe later.</span>
+        </label>
+        <button class="button primary" type="submit">Subscribe</button>
+        <p id="subscribe-result" class="form-result" aria-live="polite"></p>
       </form>
     </section>
   </main>
 
   <footer>
-    <span>OpsSage AI</span>
-    <span>Secure DevOps Intelligence</span>
-    <a href="https://github.com/amitp98414/opssage-ai" target="_blank">
-      GitHub Repository
-    </a>
+    <div><strong>OpsSage AI</strong><span>Enterprise DevOps Intelligence</span></div>
+    <div><a href="/docs">API documentation</a><a href="https://github.com/amitp98414/opssage-ai" target="_blank" rel="noreferrer">GitHub</a></div>
+    <small>Product preview. Enterprise capabilities are under active development.</small>
   </footer>
 </body>
 </html>

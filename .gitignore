@@ -30,3 +30,6 @@ data/*.sqlite*
 system-audit.txt
 venv/
 workspace/*
+
+# Local SQLite databases
+backend/*.db

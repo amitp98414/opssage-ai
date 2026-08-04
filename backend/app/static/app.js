@@ -1,42 +1,23 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const getElement = (...ids) => {
-    for (const id of ids) {
-      const element = document.getElementById(id);
-      if (element) return element;
-    }
-    return null;
-  };
+  const statusBadge = document.getElementById("nav-status");
+  const apiStatus = document.getElementById("api-status");
+  const subscribeForm = document.getElementById("subscribe-form");
+  const subscribeResult = document.getElementById("subscribe-result");
+  const subscribeButton = subscribeForm?.querySelector('button[type="submit"]');
 
-  const statusElement = getElement(
-    "service-status",
-    "health-status",
-    "status-badge"
-  );
-
-  const versionElement = getElement("app-version", "service-version");
-  const form = getElement("agent-form");
-  const promptInput = getElement("prompt", "agent-prompt");
-  const modeInput = getElement("mode", "agent-mode");
-  const apiKeyInput = getElement("api-key", "opssage-api-key");
-  const resultElement = getElement("agent-result", "result", "response");
-  const submitButton = form?.querySelector('button[type="submit"]');
-
-  function showResult(message, type = "info") {
-    if (!resultElement) return;
-
-    resultElement.textContent = message;
-    resultElement.classList.remove("success", "error", "loading");
-    resultElement.classList.add(type);
+  function setSubscriptionMessage(message, type = "") {
+    if (!subscribeResult) return;
+    subscribeResult.textContent = message;
+    subscribeResult.classList.remove("success", "error");
+    if (type) subscribeResult.classList.add(type);
   }
 
   async function checkHealth() {
     try {
       const response = await fetch("/health", {
-        headers: {
-          Accept: "application/json",
-        },
+        headers: { Accept: "application/json" },
       });
 
       if (!response.ok) {
@@ -44,123 +25,73 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const data = await response.json();
-
-      if (statusElement) {
-        statusElement.textContent =
-          data.status === "healthy" ? "Operational" : data.status;
-        statusElement.classList.remove("offline");
-        statusElement.classList.add("online");
+      if (statusBadge) {
+        statusBadge.textContent = "All systems operational";
+        statusBadge.classList.remove("offline");
       }
-
-      if (versionElement) {
-        versionElement.textContent = `v${data.version}`;
-      }
+      if (apiStatus) apiStatus.textContent = data.status === "healthy" ? "Healthy" : data.status;
     } catch (error) {
-      if (statusElement) {
-        statusElement.textContent = "Unavailable";
-        statusElement.classList.remove("online");
-        statusElement.classList.add("offline");
+      if (statusBadge) {
+        statusBadge.textContent = "Service unavailable";
+        statusBadge.classList.add("offline");
       }
-
+      if (apiStatus) apiStatus.textContent = "Unavailable";
       console.error("Health check failed:", error);
     }
   }
 
-  async function runAgent(event) {
+  async function subscribe(event) {
     event.preventDefault();
+    if (!subscribeForm) return;
 
-    const prompt = promptInput?.value.trim();
-    const mode = modeInput?.value || "auto";
-    const apiKey = apiKeyInput?.value.trim();
+    const formData = new FormData(subscribeForm);
+    const email = String(formData.get("email") || "").trim();
+    const company = String(formData.get("company") || "").trim();
+    const consent = formData.get("consent") === "on";
 
-    if (!prompt) {
-      showResult("Please enter a troubleshooting request.", "error");
-      promptInput?.focus();
+    if (!email || !consent) {
+      setSubscriptionMessage("Enter a valid work email and accept the consent option.", "error");
       return;
     }
 
-    if (!apiKey) {
-      showResult("X-API-Key is required for AI execution.", "error");
-      apiKeyInput?.focus();
-      return;
+    if (subscribeButton) {
+      subscribeButton.disabled = true;
+      subscribeButton.textContent = "Subscribing...";
     }
-
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = "Running...";
-    }
-
-    showResult("OpsSage AI is analysing your request...", "loading");
+    setSubscriptionMessage("Saving your subscription...");
 
     try {
-      const response = await fetch("/agent/run", {
+      const response = await fetch("/subscriptions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          "X-API-Key": apiKey,
         },
         body: JSON.stringify({
-          prompt,
-          mode,
+          email,
+          company: company || null,
+          source: "enterprise_landing_page",
+          consent,
         }),
       });
 
-      let data;
-
-      try {
-        data = await response.json();
-      } catch {
-        data = {};
-      }
-
-      if (response.status === 401) {
-        throw new Error("Invalid or missing API key.");
-      }
-
-      if (response.status === 429) {
-        const retryAfter = response.headers.get("Retry-After");
-        throw new Error(
-          retryAfter
-            ? `Rate limit exceeded. Try again after ${retryAfter} seconds.`
-            : "Rate limit exceeded. Please try again later."
-        );
-      }
-
-      if (response.status === 503) {
-        throw new Error(
-          "AI execution is disabled on this public demo deployment."
-        );
-      }
-
+      const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(
-          data.detail || `Request failed with HTTP ${response.status}.`
-        );
+        throw new Error(data.detail || "Unable to save your subscription.");
       }
 
-      const output =
-        data.result ??
-        data.response ??
-        data.answer ??
-        JSON.stringify(data, null, 2);
-
-      showResult(
-        typeof output === "string"
-          ? output
-          : JSON.stringify(output, null, 2),
-        "success"
-      );
+      setSubscriptionMessage(data.message || "Subscription saved.", "success");
+      subscribeForm.reset();
     } catch (error) {
-      showResult(error.message || "Unable to execute the agent.", "error");
+      setSubscriptionMessage(error.message || "Unable to subscribe right now.", "error");
     } finally {
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = "Run Agent";
+      if (subscribeButton) {
+        subscribeButton.disabled = false;
+        subscribeButton.textContent = "Subscribe";
       }
     }
   }
 
-  form?.addEventListener("submit", runAgent);
+  subscribeForm?.addEventListener("submit", subscribe);
   checkHealth();
 });
