@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from prometheus_fastapi_instrumentator import Instrumentator
 
+from app.api.workspace_routes import router as workspace_router
 from app.api.agent_routes import router as agent_router
 from app.api.auth_routes import router as auth_router
 from app.api.login_routes import router as login_router
@@ -41,6 +42,7 @@ app.include_router(agent_router)
 app.include_router(auth_router)
 app.include_router(login_router)
 app.include_router(subscription_router)
+app.include_router(workspace_router)
 
 app.mount(
     "/static",

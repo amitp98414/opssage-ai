@@ -122,8 +122,15 @@ def test_tampered_access_token_is_rejected(client):
     user = create_user()
     token = create_access_token(user)
 
-    tampered = token[:-1] + (
-        "a" if token[-1] != "a" else "b"
+    header, payload, signature = token.split(".")
+
+    tampered_signature = (
+        ("a" if signature[0] != "a" else "b")
+        + signature[1:]
+    )
+
+    tampered = ".".join(
+        (header, payload, tampered_signature)
     )
 
     client.cookies.set("opssage_access", tampered)
