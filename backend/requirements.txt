@@ -4,6 +4,7 @@ anyio==4.14.1
 certifi==2026.6.17
 click==8.4.2
 distro==1.9.0
+email-validator==2.2.0
 fastapi==0.139.0
 h11==0.16.0
 httpcore==1.0.9
@@ -11,15 +12,17 @@ httpx==0.28.1
 idna==3.18
 jiter==0.16.0
 openai==2.44.0
+openai-agents
+prometheus-fastapi-instrumentator==8.0.2
+psycopg[binary]==3.2.9
 pydantic==2.13.4
 pydantic-settings==2.14.2
 pydantic_core==2.46.4
 python-dotenv==1.2.2
 sniffio==1.3.1
+SQLAlchemy==2.0.43
 starlette==1.3.1
 tqdm==4.68.3
 typing-inspection==0.4.2
 typing_extensions==4.16.0
 uvicorn==0.50.0
-openai-agents
-prometheus-fastapi-instrumentator==8.0.2
