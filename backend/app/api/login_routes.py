@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -9,7 +9,12 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.passwords import hash_password, verify_password
-from app.core.tokens import create_token, hash_token
+from app.core.tokens import (
+    TokenValidationError,
+    create_token,
+    decode_token,
+    hash_token,
+)
 from app.models.auth_session import AuthSession
 from app.models.user import User
 
@@ -187,3 +192,155 @@ def login(
         user_id=user.id,
         email=user.email,
     )
+
+
+class CurrentUserResponse(BaseModel):
+    user_id: UUID
+    email: EmailStr
+    full_name: str
+    is_verified: bool
+
+
+def authentication_required() -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Authentication required.",
+        headers={"WWW-Authenticate": "Cookie"},
+    )
+
+
+@router.get(
+    "/me",
+    response_model=CurrentUserResponse,
+)
+def current_user(
+    request: Request,
+    db: Session = Depends(get_db),
+) -> CurrentUserResponse:
+    access_token = request.cookies.get(ACCESS_COOKIE_NAME)
+
+    if not access_token:
+        raise authentication_required()
+
+    try:
+        payload = decode_token(
+            access_token,
+            expected_type="access",
+        )
+    except TokenValidationError as exc:
+        raise authentication_required() from exc
+
+    user = db.scalar(
+        select(User).where(
+            User.id == UUID(str(payload["sub"]))
+        )
+    )
+
+    if user is None:
+        raise authentication_required()
+
+    if not user.is_active or not user.is_verified:
+        raise authentication_required()
+
+    if int(payload["ver"]) != user.token_version:
+        raise authentication_required()
+
+    return CurrentUserResponse(
+        user_id=user.id,
+        email=user.email,
+        full_name=user.full_name,
+        is_verified=user.is_verified,
+    )
+
+
+def clear_auth_cookies(response: Response) -> None:
+    """Remove authentication cookies using their original paths."""
+
+    response.delete_cookie(
+        key=ACCESS_COOKIE_NAME,
+        path="/",
+    )
+
+    response.delete_cookie(
+        key=REFRESH_COOKIE_NAME,
+        path="/auth",
+    )
+
+
+@router.post(
+    "/logout",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def logout(
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+) -> None:
+    """
+    Revoke the user's authentication sessions and remove browser cookies.
+
+    The endpoint intentionally returns the same response for valid, missing,
+    expired or malformed cookies to avoid leaking authentication state.
+    """
+
+    now = datetime.now(timezone.utc)
+    refresh_token = request.cookies.get(REFRESH_COOKIE_NAME)
+
+    # Browser cookies must always be removed, even for invalid tokens.
+    clear_auth_cookies(response)
+
+    if not refresh_token:
+        return None
+
+    try:
+        payload = decode_token(
+            refresh_token,
+            expected_type="refresh",
+        )
+        user_id = UUID(str(payload["sub"]))
+        token_version = int(payload["ver"])
+    except (TokenValidationError, TypeError, ValueError, KeyError):
+        return None
+
+    user = db.scalar(
+        select(User).where(User.id == user_id)
+    )
+
+    auth_session = db.scalar(
+        select(AuthSession).where(
+            AuthSession.user_id == user_id,
+            AuthSession.refresh_token_hash == hash_token(refresh_token),
+        )
+    )
+
+    if user is None or auth_session is None:
+        return None
+
+    expires_at = as_utc(auth_session.expires_at)
+
+    if (
+        auth_session.is_revoked
+        or expires_at is None
+        or expires_at <= now
+        or token_version != user.token_version
+    ):
+        return None
+
+    # Incrementing token_version immediately invalidates old access tokens.
+    user.token_version += 1
+
+    active_sessions = db.scalars(
+        select(AuthSession).where(
+            AuthSession.user_id == user.id,
+            AuthSession.revoked_at.is_(None),
+        )
+    ).all()
+
+    for session in active_sessions:
+        session.revoked_at = now
+        session.last_used_at = now
+
+    db.commit()
+
+    return None
+
