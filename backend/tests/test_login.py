@@ -1,3 +1,4 @@
+from app.models import user
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, select
@@ -218,3 +219,54 @@ def test_unverified_account_cannot_login(client):
     with TestSessionLocal() as db:
         sessions = db.scalars(select(AuthSession)).all()
         assert sessions == []
+
+def test_logout_revokes_all_sessions_and_clears_auth_cookies(client):
+    user = create_user()
+    initial_token_version = user.token_version
+
+    login_response = client.post(
+        "/auth/login",
+        json={
+            "email": user.email,
+            "password": "Secure-Login-Password-2026!",
+        },
+    )
+
+    assert login_response.status_code == 200
+    assert login_response.cookies.get("opssage_access")
+    assert login_response.cookies.get("opssage_refresh")
+
+    logout_response = client.post("/auth/logout")
+
+    assert logout_response.status_code == 204
+
+    cleared_cookie_headers = "\n".join(
+        logout_response.headers.get_list("set-cookie")
+    ).lower()
+    assert "opssage_access=" in cleared_cookie_headers
+    assert "opssage_refresh=" in cleared_cookie_headers
+    assert "max-age=0" in cleared_cookie_headers
+
+    with TestSessionLocal() as db:
+        session = db.scalar(
+            select(AuthSession).where(AuthSession.user_id == user.id)
+        )
+        assert session is not None
+        assert session.revoked_at is not None
+
+        persisted_user = db.get(User, user.id)
+        assert persisted_user is not None
+        assert persisted_user.token_version == initial_token_version + 1
+
+    assert client.get("/auth/me").status_code == 401
+
+def test_logout_without_refresh_cookie_returns_no_content(client):
+    response = client.post("/auth/logout")
+
+    assert response.status_code == 204
+
+    cleared_cookie_headers = "\n".join(
+        response.headers.get_list("set-cookie")
+    ).lower()
+    assert "opssage_access=" in cleared_cookie_headers
+    assert "opssage_refresh=" in cleared_cookie_headers
