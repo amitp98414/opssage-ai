@@ -8,6 +8,8 @@ from pydantic import BaseModel
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.api.agent_routes import router as agent_router
+from app.api.auth_routes import router as auth_router
+from app.api.login_routes import router as login_router
 from app.api.subscription_routes import router as subscription_router
 from app.core.config import settings
 from app.core.database import init_db
@@ -34,9 +36,17 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+# API routers are registered together to avoid accidental omission.
 app.include_router(agent_router)
+app.include_router(auth_router)
+app.include_router(login_router)
 app.include_router(subscription_router)
+
+app.mount(
+    "/static",
+    StaticFiles(directory=STATIC_DIR),
+    name="static",
+)
 
 
 class ChatRequest(BaseModel):
@@ -49,6 +59,8 @@ def root():
         "application": settings.APP_NAME,
         "version": settings.APP_VERSION,
         "agent_endpoint": "/agent/run",
+        "signup_endpoint": "/auth/signup",
+        "login_endpoint": "/auth/login",
         "subscription_endpoint": "/subscriptions",
         "documentation": "/docs",
     }
