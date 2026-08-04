@@ -27,3 +27,4 @@ typing-inspection==0.4.2
 typing_extensions==4.16.0
 uvicorn==0.50.0
 pwdlib[argon2]==0.3.0
+PyJWT[crypto]==2.13.0
