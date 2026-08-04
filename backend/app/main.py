@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import Depends, FastAPI
@@ -7,25 +8,35 @@ from pydantic import BaseModel
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.api.agent_routes import router as agent_router
+from app.api.subscription_routes import router as subscription_router
 from app.core.config import settings
+from app.core.database import init_db
+from app.core.security import enforce_rate_limit
 from app.services.openai_service import ask_ai
-from app.core.security import enforce_rate_limit
 
-from app.core.security import enforce_rate_limit
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    init_db()
+    yield
+
 
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     description=(
-        "OpsSage AI Agent for DevOps diagnostics and "
-        "authorized bug-bounty assistance."
+        "OpsSage AI for DevOps diagnostics, observability and "
+        "authorized security assistance."
     ),
+    lifespan=lifespan,
 )
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.include_router(agent_router)
+app.include_router(subscription_router)
 
 
 class ChatRequest(BaseModel):
@@ -38,6 +49,7 @@ def root():
         "application": settings.APP_NAME,
         "version": settings.APP_VERSION,
         "agent_endpoint": "/agent/run",
+        "subscription_endpoint": "/subscriptions",
         "documentation": "/docs",
     }
 
@@ -61,11 +73,11 @@ def chat(
     request: ChatRequest,
     _: str = Depends(enforce_rate_limit),
 ):
-    answer = ask_ai(request.prompt)
+    return {"response": ask_ai(request.prompt)}
 
-    return {
-        "response": answer,
-    }
 
-# Expose Prometheus metrics for monitoring.
-Instrumentator().instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)
+Instrumentator().instrument(app).expose(
+    app,
+    endpoint="/metrics",
+    include_in_schema=False,
+)
