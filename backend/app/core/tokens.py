@@ -120,3 +120,14 @@ def decode_token(
         raise TokenValidationError("Token claims are invalid.") from exc
 
     return payload
+
+
+def hash_token(token: str) -> str:
+    """Create a one-way fingerprint for storing a refresh token."""
+
+    from hashlib import sha256
+
+    if not token:
+        raise ValueError("Token cannot be empty.")
+
+    return sha256(token.encode("utf-8")).hexdigest()
