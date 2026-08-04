@@ -43,6 +43,9 @@ def init_db() -> None:
     starting the application.
     """
 
+    from app.models.membership import Membership  # noqa: F401
+    from app.models.organization import Organization  # noqa: F401
     from app.models.subscriber import Subscriber  # noqa: F401
+    from app.models.user import User  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
