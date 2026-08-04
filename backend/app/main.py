@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.api.agent_routes import router as agent_router
+from app.api.auth_routes import router as auth_router
 from app.api.subscription_routes import router as subscription_router
 from app.core.config import settings
 from app.core.database import init_db
@@ -36,6 +37,7 @@ app = FastAPI(
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.include_router(agent_router)
+app.include_router(auth_router)
 app.include_router(subscription_router)
 
 
