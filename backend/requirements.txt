@@ -14,7 +14,7 @@ jiter==0.16.0
 openai==2.44.0
 openai-agents
 prometheus-fastapi-instrumentator==8.0.2
-psycopg[binary]==3.2.9
+psycopg[binary]==3.2.13
 pydantic==2.13.4
 pydantic-settings==2.14.2
 pydantic_core==2.46.4
