@@ -344,3 +344,151 @@ def logout(
 
     return None
 
+
+class RefreshResponse(BaseModel):
+    message: str
+
+
+def revoke_all_user_sessions(
+    db: Session,
+    user: User,
+    now: datetime,
+) -> None:
+    """Invalidate all active sessions belonging to one user."""
+
+    user.token_version += 1
+
+    sessions = db.scalars(
+        select(AuthSession).where(
+            AuthSession.user_id == user.id,
+            AuthSession.revoked_at.is_(None),
+        )
+    ).all()
+
+    for session in sessions:
+        session.revoked_at = now
+        session.last_used_at = now
+
+
+@router.post(
+    "/refresh",
+    response_model=RefreshResponse,
+)
+def refresh_session(
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+) -> RefreshResponse:
+    """
+    Rotate a valid refresh token and issue a new token pair.
+
+    Reusing a previously revoked refresh token is treated as possible token
+    theft and invalidates all remaining sessions for that user.
+    """
+
+    now = datetime.now(timezone.utc)
+    refresh_token = request.cookies.get(REFRESH_COOKIE_NAME)
+
+    if not refresh_token:
+        raise authentication_required()
+
+    try:
+        payload = decode_token(
+            refresh_token,
+            expected_type="refresh",
+        )
+        user_id = UUID(str(payload["sub"]))
+        token_version = int(payload["ver"])
+    except (TokenValidationError, TypeError, ValueError, KeyError) as exc:
+        raise authentication_required() from exc
+
+    user = db.scalar(
+        select(User).where(User.id == user_id)
+    )
+
+    auth_session = db.scalar(
+        select(AuthSession).where(
+            AuthSession.user_id == user_id,
+            AuthSession.refresh_token_hash == hash_token(refresh_token),
+        )
+    )
+
+    if user is None or auth_session is None:
+        raise authentication_required()
+
+    expires_at = as_utc(auth_session.expires_at)
+
+    # A revoked token being presented again may indicate token theft.
+    if auth_session.is_revoked:
+        revoke_all_user_sessions(db, user, now)
+        db.commit()
+        clear_auth_cookies(response)
+        raise authentication_required()
+
+    if (
+        expires_at is None
+        or expires_at <= now
+        or token_version != user.token_version
+        or not user.is_active
+        or not user.is_verified
+    ):
+        auth_session.revoked_at = now
+        auth_session.last_used_at = now
+        db.commit()
+        clear_auth_cookies(response)
+        raise authentication_required()
+
+    # Revoke the token that was just used.
+    auth_session.revoked_at = now
+    auth_session.last_used_at = now
+
+    new_access_token = create_token(
+        user_id=user.id,
+        token_version=user.token_version,
+        token_type="access",
+    )
+
+    new_refresh_token = create_token(
+        user_id=user.id,
+        token_version=user.token_version,
+        token_type="refresh",
+    )
+
+    db.add(
+        AuthSession(
+            user_id=user.id,
+            refresh_token_hash=hash_token(new_refresh_token),
+            expires_at=(
+                now + timedelta(days=settings.REFRESH_TOKEN_DAYS)
+            ),
+        )
+    )
+
+    db.commit()
+
+    same_site = cookie_samesite()
+
+    response.set_cookie(
+        key=ACCESS_COOKIE_NAME,
+        value=new_access_token,
+        max_age=settings.ACCESS_TOKEN_MINUTES * 60,
+        httponly=True,
+        secure=settings.SESSION_COOKIE_SECURE,
+        samesite=same_site,
+        path="/",
+    )
+
+    response.set_cookie(
+        key=REFRESH_COOKIE_NAME,
+        value=new_refresh_token,
+        max_age=settings.REFRESH_TOKEN_DAYS * 24 * 60 * 60,
+        httponly=True,
+        secure=settings.SESSION_COOKIE_SECURE,
+        samesite=same_site,
+        path="/auth",
+    )
+
+    return RefreshResponse(
+        message="Session refreshed successfully.",
+    )
+
