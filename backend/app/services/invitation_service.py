@@ -159,6 +159,7 @@ def revoke_invitation(
             Invitation.expires_at > revoked_at,
         )
         .values(revoked_at=revoked_at)
+        .execution_options(synchronize_session=False)
     )
 
     if result.rowcount != 1:
@@ -223,6 +224,7 @@ def accept_invitation(
             Invitation.expires_at > accepted_at,
         )
         .values(accepted_at=accepted_at)
+        .execution_options(synchronize_session=False)
     )
 
     if result.rowcount != 1:
