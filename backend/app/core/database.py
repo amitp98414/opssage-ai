@@ -43,6 +43,7 @@ def init_db() -> None:
     starting the application.
     """
     from app.models.auth_session import AuthSession  # noqa: F401
+    from app.models.invitation import Invitation  # noqa: F401
     from app.models.membership import Membership  # noqa: F401
     from app.models.organization import Organization  # noqa: F401
     from app.models.subscriber import Subscriber  # noqa: F401

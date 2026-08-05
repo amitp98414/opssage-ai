@@ -5,6 +5,7 @@ from alembic import context
 from app.core.config import settings
 from app.core.database import Base, engine
 from app.models.auth_session import AuthSession  # noqa: F401
+from app.models.invitation import Invitation  # noqa: F401
 from app.models.membership import Membership  # noqa: F401
 from app.models.organization import Organization  # noqa: F401
 from app.models.subscriber import Subscriber  # noqa: F401
