@@ -11,6 +11,7 @@ from app.api.workspace_routes import router as workspace_router
 from app.api.agent_routes import router as agent_router
 from app.api.auth_routes import router as auth_router
 from app.api.invitation_routes import router as invitation_router
+from app.api.member_routes import router as member_router
 from app.api.login_routes import router as login_router
 from app.api.subscription_routes import router as subscription_router
 from app.core.config import settings
@@ -42,6 +43,7 @@ app = FastAPI(
 app.include_router(agent_router)
 app.include_router(auth_router)
 app.include_router(invitation_router)
+app.include_router(member_router)
 app.include_router(login_router)
 app.include_router(subscription_router)
 app.include_router(workspace_router)
