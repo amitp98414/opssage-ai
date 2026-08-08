@@ -18,6 +18,8 @@ services:
     depends_on:
       ollama:
         condition: service_healthy
+      ollama-model-init:
+        condition: service_completed_successfully
     restart: unless-stopped
 
   ollama:
@@ -38,17 +40,13 @@ services:
     image: ollama/ollama:latest
     container_name: opssage-ollama-model-init
     environment:
+      OLLAMA_HOST: http://ollama:11434
       OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2:3b}
-    volumes:
-      - ollama_models:/root/.ollama
     entrypoint: ["/bin/sh", "-c"]
     command:
       - >-
-        ollama serve >/tmp/ollama.log 2>&1 &
-        pid=$$!;
-        sleep 3;
+        until ollama list >/dev/null 2>&1; do sleep 2; done;
         ollama pull "$${OLLAMA_MODEL}";
-        kill $$pid || true;
     depends_on:
       ollama:
         condition: service_healthy
