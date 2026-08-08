@@ -15,7 +15,7 @@ from app.api.subscription_routes import router as subscription_router
 from app.core.config import settings
 from app.core.database import init_db
 from app.core.security import enforce_rate_limit
-from app.services.openai_service import ask_ai
+from app.services.ai_service import ask_ai
 
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
@@ -31,13 +31,12 @@ app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     description=(
-        "OpsSage AI for DevOps diagnostics, observability and "
+        "OpsSage AI for DevOps diagnostics, observability, automation and "
         "authorized security assistance."
     ),
     lifespan=lifespan,
 )
 
-# API routers are registered together to avoid accidental omission.
 app.include_router(agent_router)
 app.include_router(auth_router)
 app.include_router(login_router)
@@ -60,6 +59,7 @@ def root():
     return {
         "application": settings.APP_NAME,
         "version": settings.APP_VERSION,
+        "ai_provider": settings.AI_PROVIDER,
         "agent_endpoint": "/agent/run",
         "signup_endpoint": "/auth/signup",
         "login_endpoint": "/auth/login",
@@ -79,6 +79,7 @@ def health():
         "status": "healthy",
         "application": settings.APP_NAME,
         "version": settings.APP_VERSION,
+        "ai_provider": settings.AI_PROVIDER,
     }
 
 
