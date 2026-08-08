@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OpsSage AI Agent Control Center">
+  <title>OpsSage AI | Agent Control Center</title>
+  <link rel="stylesheet" href="/static/control-center.css">
+  <script src="/static/control-center.js" defer></script>
+</head>
+<body>
+  <div class="scanline"></div>
+  <header class="topbar">
+    <a class="brand" href="/demo"><span class="brand-mark">OS</span><span>OPSSAGE AI</span></a>
+    <div class="system-state"><span class="pulse"></span><span id="system-status">SYSTEM ONLINE</span></div>
+    <a class="docs" href="/docs" target="_blank" rel="noreferrer">API</a>
+  </header>
+
+  <main class="shell">
+    <section class="hero-grid">
+      <div class="core-panel panel">
+        <div class="panel-label">AGENT CORE / LIVE</div>
+        <div class="core-wrap">
+          <div class="orbit orbit-one"></div>
+          <div class="orbit orbit-two"></div>
+          <div class="orbit orbit-three"></div>
+          <div class="core-glow"></div>
+          <div class="core">OS<span>CORE</span></div>
+        </div>
+        <div class="core-meta">
+          <div><span>ACTIVE AGENT</span><strong id="active-agent">STANDBY</strong></div>
+          <div><span>EVENTS</span><strong id="event-count">0</strong></div>
+        </div>
+      </div>
+
+      <div class="command-panel panel">
+        <div class="panel-label">COMMAND CONSOLE</div>
+        <form id="agent-form">
+          <label for="api-key">Execution API key</label>
+          <input id="api-key" type="password" autocomplete="off" placeholder="X-API-Key (stored only in this browser)">
+          <div class="row">
+            <div class="field-grow">
+              <label for="mode">Agent mode</label>
+              <select id="mode">
+                <option value="auto">AUTO / ORCHESTRATOR</option>
+                <option value="devops">DEVOPS</option>
+                <option value="bugbounty">BUG BOUNTY / AUTHORIZED</option>
+              </select>
+            </div>
+            <button id="clear-key" class="ghost" type="button">Clear key</button>
+          </div>
+          <label for="prompt">Command</label>
+          <textarea id="prompt" minlength="3" maxlength="12000" placeholder="Ask OpsSage to diagnose a DevOps problem..."></textarea>
+          <button id="run-button" class="execute" type="submit"><span>RUN AGENT</span><span>→</span></button>
+          <p id="form-status" class="form-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="workspace-grid">
+      <div class="panel activity-panel">
+        <div class="panel-head"><span class="panel-label">LIVE AGENT ACTIVITY</span><button id="refresh" class="ghost">REFRESH</button></div>
+        <div id="events" class="events" aria-live="polite"></div>
+      </div>
+
+      <div class="panel response-panel">
+        <div class="panel-label">AGENT RESPONSE</div>
+        <div id="response" class="response empty">Awaiting command...</div>
+      </div>
+    </section>
+
+    <section class="metrics-grid">
+      <div class="metric panel"><span>CONTROL PLANE</span><strong id="metric-control">READY</strong></div>
+      <div class="metric panel"><span>ORCHESTRATOR</span><strong>CONNECTED</strong></div>
+      <div class="metric panel"><span>APPROVAL GATES</span><strong>ENABLED</strong></div>
+      <div class="metric panel"><span>SECURITY MODE</span><strong>AUTHORIZED</strong></div>
+    </section>
+  </main>
+
+  <footer>OPSSAGE AI / AGENT CONTROL CENTER / DEVELOPMENT BUILD</footer>
+</body>
+</html>

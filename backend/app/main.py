@@ -10,6 +10,7 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from app.api.workspace_routes import router as workspace_router
 from app.api.agent_routes import router as agent_router
 from app.api.auth_routes import router as auth_router
+from app.api.control_center_routes import router as control_center_router
 from app.api.login_routes import router as login_router
 from app.api.subscription_routes import router as subscription_router
 from app.core.config import settings
@@ -39,6 +40,7 @@ app = FastAPI(
 
 # API routers are registered together to avoid accidental omission.
 app.include_router(agent_router)
+app.include_router(control_center_router)
 app.include_router(auth_router)
 app.include_router(login_router)
 app.include_router(subscription_router)
@@ -61,6 +63,9 @@ def root():
         "application": settings.APP_NAME,
         "version": settings.APP_VERSION,
         "agent_endpoint": "/agent/run",
+        "control_center": "/control-center",
+        "control_status": "/control/status",
+        "control_events": "/control/events",
         "signup_endpoint": "/auth/signup",
         "login_endpoint": "/auth/login",
         "subscription_endpoint": "/subscriptions",
@@ -71,6 +76,11 @@ def root():
 @app.get("/demo", include_in_schema=False)
 def demo():
     return FileResponse(STATIC_DIR / "index.html")
+
+
+@app.get("/control-center", include_in_schema=False)
+def control_center():
+    return FileResponse(STATIC_DIR / "control-center.html")
 
 
 @app.get("/health")
