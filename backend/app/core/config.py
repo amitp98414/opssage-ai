@@ -7,8 +7,16 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     DEBUG: bool = False
 
+    # AI provider is selectable at deployment time.
+    # Supported values: openai, ollama.
+    AI_PROVIDER: str = "openai"
+    AI_REQUEST_TIMEOUT_SECONDS: float = 120.0
+
     OPENAI_API_KEY: str = ""
     OPENAI_MODEL: str = "gpt-4.1-mini"
+
+    OLLAMA_BASE_URL: str = "http://ollama:11434"
+    OLLAMA_MODEL: str = "llama3.2:3b"
 
     OPSSAGE_API_KEY: str = ""
     RATE_LIMIT_REQUESTS: int = 10
