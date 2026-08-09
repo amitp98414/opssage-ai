@@ -7,11 +7,12 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from app.api.workspace_routes import router as workspace_router
 from app.api.agent_routes import router as agent_router
 from app.api.auth_routes import router as auth_router
 from app.api.login_routes import router as login_router
+from app.api.monetization_routes import router as monetization_router
 from app.api.subscription_routes import router as subscription_router
+from app.api.workspace_routes import router as workspace_router
 from app.core.config import settings
 from app.core.database import init_db
 from app.core.security import enforce_rate_limit
@@ -43,6 +44,7 @@ app.include_router(auth_router)
 app.include_router(login_router)
 app.include_router(subscription_router)
 app.include_router(workspace_router)
+app.include_router(monetization_router)
 
 app.mount(
     "/static",
@@ -64,6 +66,7 @@ def root():
         "signup_endpoint": "/auth/signup",
         "login_endpoint": "/auth/login",
         "subscription_endpoint": "/subscriptions",
+        "monetization_endpoint": "/monetization",
         "documentation": "/docs",
     }
 
