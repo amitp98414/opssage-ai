@@ -44,9 +44,14 @@ def init_db() -> None:
     """
     from app.models.auth_session import AuthSession  # noqa: F401
     from app.models.membership import Membership  # noqa: F401
+    from app.models.monetization import (  # noqa: F401
+        AdCampaign,
+        AdEvent,
+        DeveloperAccount,
+        RevenueLedger,
+    )
     from app.models.organization import Organization  # noqa: F401
     from app.models.subscriber import Subscriber  # noqa: F401
     from app.models.user import User  # noqa: F401
-    
 
     Base.metadata.create_all(bind=engine)
