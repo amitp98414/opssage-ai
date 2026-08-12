@@ -10,17 +10,10 @@ from fastapi.security import APIKeyHeader
 
 from app.core.config import settings
 
-from secrets import compare_digest
-
-from fastapi import HTTPException, Security, status
-from fastapi.security import APIKeyHeader
-
-from app.core.config import settings
-
 
 api_key_header = APIKeyHeader(
     name="X-API-Key",
-    scheme_name="OpsSageApiKey",
+    scheme_name="OrbitOSApiKey",
     description="API key required for AI execution endpoints.",
     auto_error=False,
 )
@@ -46,6 +39,7 @@ def require_api_key(
 
     return api_key
 
+
 _rate_limit_history: dict[str, deque[float]] = defaultdict(deque)
 _rate_limit_lock = Lock()
 
@@ -58,7 +52,7 @@ def enforce_rate_limit(
     window_seconds = max(settings.RATE_LIMIT_WINDOW_SECONDS, 1)
     now = monotonic()
 
-    # Store only a hash of the API key in memory.
+    # Store only a hash of the API key in memory; never retain the raw secret.
     bucket_id = sha256(api_key.encode("utf-8")).hexdigest()
 
     with _rate_limit_lock:
