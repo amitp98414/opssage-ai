@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    APP_NAME: str = "OpsSage AI"
+    APP_NAME: str = "OrbitOS AI"
     APP_VERSION: str = "2.0.0"
     ENVIRONMENT: str = "development"
     DEBUG: bool = False
@@ -20,8 +20,8 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_SECRET: str = ""
 
     JWT_ALGORITHM: str = "HS256"
-    JWT_ISSUER: str = "opssage-ai"
-    JWT_AUDIENCE: str = "opssage-ai-web"
+    JWT_ISSUER: str = "orbit-os-ai"
+    JWT_AUDIENCE: str = "orbit-os-ai-web"
 
     ACCESS_TOKEN_MINUTES: int = 15
     REFRESH_TOKEN_DAYS: int = 7
