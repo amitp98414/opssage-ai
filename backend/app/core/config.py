@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     LOGIN_MAX_ATTEMPTS: int = 5
     LOGIN_LOCK_MINUTES: int = 15
 
+    # Development may use HTTP; production deployments must explicitly enable
+    # secure cookies over HTTPS.
     SESSION_COOKIE_SECURE: bool = False
     SESSION_COOKIE_SAMESITE: str = "lax"
 
